@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Portal</title>
+    <!-- Use Tailwind CSS for a clean, modern, and responsive design -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles for a better look and feel */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+        }
+        .container {
+            max-width: 28rem; /* Set a max-width for desktop view */
+        }
+        .input-group input:focus {
+            outline: none;
+            border-color: #3b82f6; /* Blue-500 */
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5); /* Blue-500 with opacity */
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
+    <div class="container mx-auto bg-white p-8 rounded-xl shadow-2xl space-y-6 text-center">
+        <h1 class="text-3xl font-bold text-gray-800">Student Info Portal</h1>
+        <p class="text-gray-600">Enter your lunch number to see your club attendance and volunteer hours.</p>
+
+        <!-- Input Form -->
+        <div class="input-group">
+            <input type="text" id="lunch-number-input" placeholder="e.g., 12345" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors">
+        </div>
+        <button id="search-button" class="w-full bg-blue-600 text-white font-semibold py-3 rounded-lg shadow-lg hover:bg-blue-700 transition-colors">
+            Search
+        </button>
+
+        <!-- Results Container -->
+        <div id="results-container" class="hidden text-left mt-6 border-t border-gray-200 pt-6">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">Your Summary</h2>
+            <div class="space-y-4">
+                <div class="p-4 bg-gray-50 rounded-lg shadow-inner">
+                    <h3 class="text-xl font-semibold text-gray-700">Club Attendance</h3>
+                    <p id="club-attendance" class="text-gray-600 mt-2 text-lg">0 hours</p>
+                </div>
+                <div class="p-4 bg-gray-50 rounded-lg shadow-inner">
+                    <h3 class="text-xl font-semibold text-gray-700">Volunteer Hours</h3>
+                    <p id="volunteer-hours" class="text-gray-600 mt-2 text-lg">0 hours</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Error Message -->
+        <p id="error-message" class="text-red-500 mt-4 hidden">Student not found. Please check your lunch number and try again.</p>
+    </div>
+
+    <script>
+        // Data for demonstration purposes. In a real application, this would come from a secure database.
+        const studentData = {
+            '12345': {
+                clubAttendance: 'Debate Club: 15 sessions',
+                volunteerHours: 'Soup Kitchen: 20 hours'
+            },
+            '67890': {
+                clubAttendance: 'Chess Club: 8 sessions',
+                volunteerHours: 'Library Helper: 12 hours'
+            },
+            '98765': {
+                clubAttendance: 'Art Club: 10 sessions',
+                volunteerHours: 'Park Cleanup: 5 hours'
+            }
+        };
+
+        // Get elements from the DOM
+        const lunchNumberInput = document.getElementById('lunch-number-input');
+        const searchButton = document.getElementById('search-button');
+        const resultsContainer = document.getElementById('results-container');
+        const errorMessage = document.getElementById('error-message');
+        const clubAttendanceElement = document.getElementById('club-attendance');
+        const volunteerHoursElement = document.getElementById('volunteer-hours');
+
+        // Function to handle the search logic
+        function searchStudentData() {
+            // Get the value from the input and trim any whitespace
+            const lunchNumber = lunchNumberInput.value.trim();
+
+            // Check if the lunch number exists in our data
+            if (studentData[lunchNumber]) {
+                const student = studentData[lunchNumber];
+                
+                // Update the UI with the student's information
+                clubAttendanceElement.textContent = student.clubAttendance;
+                volunteerHoursElement.textContent = student.volunteerHours;
+                
+                // Show the results and hide any error messages
+                resultsContainer.classList.remove('hidden');
+                errorMessage.classList.add('hidden');
+            } else {
+                // If student is not found, hide results and show an error
+                resultsContainer.classList.add('hidden');
+                errorMessage.classList.remove('hidden');
+            }
+        }
+
+        // Add event listeners
+        searchButton.addEventListener('click', searchStudentData);
+        lunchNumberInput.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                event.preventDefault(); // Prevent the form from submitting and reloading the page
+                searchStudentData();
+            }
+        });
+    </script>
+</body>
+</html>
